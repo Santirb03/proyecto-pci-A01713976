@@ -1,65 +1,87 @@
 print("Bienvenido a tu gestor de tareas")
 
-tareas = []
+tareas = [None] * 100  # Espacio para 100 tareas
+contador = 0
 opcion = ""
 
-def agregar_tarea(tareas):
+def agregar_tarea(tareas, contador):
     nombre = input("Nombre de la tarea: ")
     prioridad = input("Prioridad (alta, media, baja): ")
     fecha = input("Fecha límite (dd/mm/yyyy): ")
     tarea = [nombre, prioridad, fecha, "Pendiente"]
-    tareas.append(tarea)
+    tareas[contador] = tarea
     print("Tarea agregada.")
+    return contador + 1
 
-def mostrar_todas(tareas):
-    if len(tareas) == 0:
+def mostrar_todas(tareas, contador):
+    if contador == 0:
         print("No hay tareas.")
     else:
-        for i, tarea in enumerate(tareas, 1):
-            print(f"{i}. {tarea[0]} | {tarea[3]} | Prioridad: {tarea[1]} | Fecha límite: {tarea[2]}")
+        i = 0
+        while i < contador:
+            tarea = tareas[i]
+            print(str(i + 1) + ". " + tarea[0] + " | " + tarea[3] + " | Prioridad: " + tarea[1] + " | Fecha límite: " + tarea[2])
+            i += 1
 
-def buscar_tarea(tareas):
+def buscar_tarea(tareas, contador):
     nombre = input("Nombre de la tarea a buscar: ")
     encontrada = False
-    for tarea in tareas:
+    i = 0
+    while i < contador:
+        tarea = tareas[i]
         if tarea[0] == nombre:
-            print(f"{tarea[0]} | {tarea[3]} | Prioridad: {tarea[1]} | Fecha límite: {tarea[2]}")
+            print(tarea[0] + " | " + tarea[3] + " | Prioridad: " + tarea[1] + " | Fecha límite: " + tarea[2])
             encontrada = True
+        i += 1
     if not encontrada:
         print("No encontrada.")
 
-def marcar_completada(tareas):
+def marcar_completada(tareas, contador):
     nombre = input("Nombre de la tarea a marcar como completada: ")
     marcado = False
-    for tarea in tareas:
+    i = 0
+    while i < contador:
+        tarea = tareas[i]
         if tarea[0] == nombre:
             tarea[3] = "Completada"
             print("Tarea marcada como completada.")
             marcado = True
+        i += 1
     if not marcado:
         print("No encontrada.")
 
-def eliminar_tarea(tareas):
+def eliminar_tarea(tareas, contador):
     nombre = input("Nombre de la tarea a eliminar: ")
-    nueva_lista = []
     eliminada = False
-    for tarea in tareas:
+    i = 0
+    while i < contador:
+        tarea = tareas[i]
         if tarea[0] == nombre:
             print("Tarea eliminada.")
+            # Mover todas las tareas siguientes una posición atrás
+            j = i
+            while j < contador - 1:
+                tareas[j] = tareas[j + 1]
+                j += 1
+            tareas[contador - 1] = None
+            contador -= 1
             eliminada = True
-        else:
-            nueva_lista.append(tarea)
-    tareas[:] = nueva_lista
+            break
+        i += 1
     if not eliminada:
         print("No encontrada.")
+    return contador
 
-def mostrar_por_prioridad(tareas):
+def mostrar_por_prioridad(tareas, contador):
     prioridad = input("Prioridad a mostrar (alta, media, baja): ")
     hay = False
-    for tarea in tareas:
+    i = 0
+    while i < contador:
+        tarea = tareas[i]
         if tarea[1] == prioridad:
-            print(f"{tarea[0]} | {tarea[3]} | Prioridad: {tarea[1]} | Fecha límite: {tarea[2]}")
+            print(tarea[0] + " | " + tarea[3] + " | Prioridad: " + tarea[1] + " | Fecha límite: " + tarea[2])
             hay = True
+        i += 1
     if not hay:
         print("No hay tareas con esa prioridad.")
 
@@ -74,26 +96,22 @@ def mostrar_menu():
     print("7. Mostrar tareas pendientes con fecha límite cercana")
     print("8. Salir")
 
-print("Bienvenido a tu gestor de tareas")
-tareas = []
-opcion = ""
-
 while opcion != "8":
     mostrar_menu()
     opcion = input("Elige una opción: ")
 
     if opcion == "1":
-        agregar_tarea(tareas)
+        contador = agregar_tarea(tareas, contador)
     elif opcion == "2":
-        mostrar_todas(tareas)
+        mostrar_todas(tareas, contador)
     elif opcion == "3":
-        buscar_tarea(tareas)
+        buscar_tarea(tareas, contador)
     elif opcion == "4":
-        marcar_completada(tareas)
+        marcar_completada(tareas, contador)
     elif opcion == "5":
-        eliminar_tarea(tareas)
+        contador = eliminar_tarea(tareas, contador)
     elif opcion == "6":
-        mostrar_por_prioridad(tareas)
+        mostrar_por_prioridad(tareas, contador)
     elif opcion == "7":
         print("No disponible sin fechas automáticas.")
     elif opcion == "8":
