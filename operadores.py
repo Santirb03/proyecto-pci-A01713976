@@ -1,6 +1,6 @@
 print("Bienvenido a tu gestor de tareas")
 
-tareas = [None] * 100  # Espacio para 100 tareas
+tareas = [None] * 100  
 contador = 0
 opcion = ""
 
@@ -8,10 +8,14 @@ def agregar_tarea(tareas, contador):
     nombre = input("Nombre de la tarea: ")
     prioridad = input("Prioridad (alta, media, baja): ")
     fecha = input("Fecha límite (dd/mm/yyyy): ")
-    tarea = [nombre, prioridad, fecha, "Pendiente"]
-    tareas[contador] = tarea
-    print("Tarea agregada.")
-    return contador + 1
+    if prioridad == "alta" or prioridad == "media" or prioridad == "baja":
+        tarea = [nombre, prioridad, fecha, "Pendiente"]
+        tareas[contador] = tarea
+        print("Tarea agregada.")
+        return contador + 1
+    else:
+        print("Prioridad inválida. Usa alta, media o baja.")
+        return contador
 
 def mostrar_todas(tareas, contador):
     if contador == 0:
@@ -43,8 +47,11 @@ def marcar_completada(tareas, contador):
     while i < contador:
         tarea = tareas[i]
         if tarea[0] == nombre:
-            tarea[3] = "Completada"
-            print("Tarea marcada como completada.")
+            if tarea[3] == "Pendiente":
+                tarea[3] = "Completada"
+                print("Tarea marcada como completada.")
+            else:
+                print("La tarea ya está completada.")
             marcado = True
         i += 1
     if not marcado:
@@ -58,7 +65,6 @@ def eliminar_tarea(tareas, contador):
         tarea = tareas[i]
         if tarea[0] == nombre:
             print("Tarea eliminada.")
-            # Mover todas las tareas siguientes una posición atrás
             j = i
             while j < contador - 1:
                 tareas[j] = tareas[j + 1]
@@ -66,14 +72,18 @@ def eliminar_tarea(tareas, contador):
             tareas[contador - 1] = None
             contador -= 1
             eliminada = True
-            break
-        i += 1
+            
+        else:
+            i += 1
     if not eliminada:
         print("No encontrada.")
     return contador
 
 def mostrar_por_prioridad(tareas, contador):
     prioridad = input("Prioridad a mostrar (alta, media, baja): ")
+    if prioridad != "alta" and prioridad != "media" and prioridad != "baja":
+        print("Prioridad inválida.")
+        return
     hay = False
     i = 0
     while i < contador:
