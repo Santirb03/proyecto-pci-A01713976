@@ -65,6 +65,7 @@ def eliminar_tarea(tareas, contador):
         tarea = tareas[i]
         if tarea[0] == nombre:
             print("Tarea eliminada.")
+            # Desplazar todas las tareas hacia la izquierda
             j = i
             while j < contador - 1:
                 tareas[j] = tareas[j + 1]
@@ -72,7 +73,8 @@ def eliminar_tarea(tareas, contador):
             tareas[contador - 1] = None
             contador -= 1
             eliminada = True
-            
+            # No incrementar i porque ahora hay una nueva tarea en la posición i
+            # después del desplazamiento
         else:
             i += 1
     if not eliminada:
